@@ -4,6 +4,8 @@ local lplr = game.Players.LocalPlayer
 while not lplr.Character do wait() end
 local ldata = game.ReplicatedStorage:WaitForChild("Datas"):WaitForChild(tostring(lplr.UserId))
 
+wait(2)
+
 -- LocalScript to delete all GUI elements from the LocalPlayer's PlayerGui
 
 -- Get the LocalPlayer
