@@ -1,0 +1,211 @@
+local screenGui = Instance.new("ScreenGui")
+local mainFrame = Instance.new("Frame")
+local uiCorner = Instance.new("UICorner")
+
+local usernameLabel = Instance.new("TextLabel")
+local usernameValueLabel = Instance.new("TextLabel")
+
+local rebirthsLabel = Instance.new("TextLabel")
+local rebirthsValueLabel = Instance.new("TextLabel")
+
+local rebirthRequirementLabel = Instance.new("TextLabel")
+local rebirthRequirementValueLabel = Instance.new("TextLabel")
+
+local statsLabel = Instance.new("TextLabel")
+local statsValueLabel = Instance.new("TextLabel")
+
+local questsLabel = Instance.new("TextLabel")
+local questsValueLabel = Instance.new("TextLabel")
+
+local bottomFrame = Instance.new("Frame")
+local bottomTextLabel = Instance.new("TextLabel")
+
+-- Parent ScreenGui to StarterGui
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+screenGui.Name = "CustomGUI"
+
+-- Main Frame setup
+mainFrame.Parent = screenGui
+mainFrame.Size = UDim2.new(0.8, 0, 0.5, 0)
+mainFrame.Position = UDim2.new(0.1, 0, 0.2, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+mainFrame.BackgroundTransparency = 0.3
+
+-- UICorner for rounded edges
+uiCorner.Parent = mainFrame
+uiCorner.CornerRadius = UDim.new(0.1, 0)
+
+-- Username Label
+usernameLabel.Parent = mainFrame
+usernameLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+usernameLabel.Position = UDim2.new(0.05, 0, 0.05, 0)
+usernameLabel.BackgroundTransparency = 1
+usernameLabel.Text = "Username"
+usernameLabel.TextScaled = true
+usernameLabel.Font = Enum.Font.SourceSansBold
+usernameLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Username Value Label
+usernameValueLabel.Parent = mainFrame
+usernameValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+usernameValueLabel.Position = UDim2.new(0.05, 0, 0.15, 0)
+usernameValueLabel.BackgroundTransparency = 1
+usernameValueLabel.Text = "[Username]"
+usernameValueLabel.TextScaled = true
+usernameValueLabel.Font = Enum.Font.SourceSans
+usernameValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Rebirths Label
+rebirthsLabel.Parent = mainFrame
+rebirthsLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+rebirthsLabel.Position = UDim2.new(0.35, 0, 0.05, 0)
+rebirthsLabel.BackgroundTransparency = 1
+rebirthsLabel.Text = "Rebirths"
+rebirthsLabel.TextScaled = true
+rebirthsLabel.Font = Enum.Font.SourceSansBold
+rebirthsLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Rebirths Value Label
+rebirthsValueLabel.Parent = mainFrame
+rebirthsValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+rebirthsValueLabel.Position = UDim2.new(0.35, 0, 0.15, 0)
+rebirthsValueLabel.BackgroundTransparency = 1
+rebirthsValueLabel.Text = "[Rebirths]"
+rebirthsValueLabel.TextScaled = true
+rebirthsValueLabel.Font = Enum.Font.SourceSans
+rebirthsValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Rebirth Requirement Label
+rebirthRequirementLabel.Parent = mainFrame
+rebirthRequirementLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+rebirthRequirementLabel.Position = UDim2.new(0.35, 0, 0.25, 0)
+rebirthRequirementLabel.BackgroundTransparency = 1
+rebirthRequirementLabel.Text = "Rebirth Req"
+rebirthRequirementLabel.TextScaled = true
+rebirthRequirementLabel.Font = Enum.Font.SourceSansBold
+rebirthRequirementLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Rebirth Requirement Value Label
+rebirthRequirementValueLabel.Parent = mainFrame
+rebirthRequirementValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+rebirthRequirementValueLabel.Position = UDim2.new(0.35, 0, 0.35, 0)
+rebirthRequirementValueLabel.BackgroundTransparency = 1
+rebirthRequirementValueLabel.Text = "[Requirement]"
+rebirthRequirementValueLabel.TextScaled = true
+rebirthRequirementValueLabel.Font = Enum.Font.SourceSans
+rebirthRequirementValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Stats Label
+statsLabel.Parent = mainFrame
+statsLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+statsLabel.Position = UDim2.new(0.65, 0, 0.05, 0)
+statsLabel.BackgroundTransparency = 1
+statsLabel.Text = "Stats"
+statsLabel.TextScaled = true
+statsLabel.Font = Enum.Font.SourceSansBold
+statsLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Stats Value Label
+statsValueLabel.Parent = mainFrame
+statsValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+statsValueLabel.Position = UDim2.new(0.65, 0, 0.15, 0)
+statsValueLabel.BackgroundTransparency = 1
+statsValueLabel.Text = "[Stats]"
+statsValueLabel.TextScaled = true
+statsValueLabel.Font = Enum.Font.SourceSans
+statsValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Quests Label
+questsLabel.Parent = mainFrame
+questsLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+questsLabel.Position = UDim2.new(0.05, 0, 0.25, 0)
+questsLabel.BackgroundTransparency = 1
+questsLabel.Text = "Quests"
+questsLabel.TextScaled = true
+questsLabel.Font = Enum.Font.SourceSansBold
+questsLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Quests Value Label
+questsValueLabel.Parent = mainFrame
+questsValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+questsValueLabel.Position = UDim2.new(0.05, 0, 0.35, 0)
+questsValueLabel.BackgroundTransparency = 1
+questsValueLabel.Text = "[Quests]"
+questsValueLabel.TextScaled = true
+questsValueLabel.Font = Enum.Font.SourceSans
+questsValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Bottom Frame setup
+bottomFrame.Parent = mainFrame
+bottomFrame.Size = UDim2.new(0.9, 0, 0.4, 0)
+bottomFrame.Position = UDim2.new(0.05, 0, 0.5, 0)
+bottomFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+bottomFrame.BackgroundTransparency = 0.5
+
+-- Bottom Text Label
+bottomTextLabel.Parent = bottomFrame
+bottomTextLabel.Size = UDim2.new(1, 0, 1, 0)
+bottomTextLabel.BackgroundTransparency = 1
+bottomTextLabel.Text = "DBU Farm\nPersonalized"
+bottomTextLabel.TextScaled = true
+bottomTextLabel.Font = Enum.Font.SourceSansBold
+bottomTextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Update values dynamically
+task.spawn(function()
+    while true do
+        local player = game.Players.LocalPlayer
+        local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+
+        -- Check if playerStats exists
+        if playerStats then
+            -- Username
+            usernameValueLabel.Text = player.Name
+
+            -- Rebirths
+            local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+            rebirthsValueLabel.Text = tostring(rebirths)
+
+            -- Calculate Rebirth Requirement
+            local requirement = 2000000 + 3000000 * rebirths
+            rebirthRequirementValueLabel.Text = tostring(requirement)
+
+            -- Stats (Energy)
+            local function format_number(number)
+                local suffixes = {"", "K", "M", "B", "T", "QD"}
+                local index = 1
+                while math.abs(number) >= 1000 and index < #suffixes do
+                    number = number / 1000.0
+                    index = index + 1
+                end
+                return string.format("%.2f%s", number, suffixes[index])
+            end
+
+            local energy = playerStats:FindFirstChild("Energy") and format_number(playerStats.Energy.Value) or "0"
+            statsValueLabel.Text = energy
+
+            -- Quests (Updated logic)
+            local ldata = game.Players.LocalPlayer:FindFirstChild("Data") -- assuming player data
+            local data = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+
+            if ldata and data and ldata:FindFirstChild("Quest") and data:FindFirstChild("Quest") then
+                if ldata.Quest.Value ~= data.Quest.Value and data.Quest.Value ~= "" then
+                    game:GetService("ReplicatedStorage").Package.Events.Qaction:InvokeServer(game.Workspace.Others.NPCs[data.Quest.Value])
+                    game.Players.LocalPlayer.PlayerGui.Main.MainFrame.Frames.Quest.Visible = false
+                end
+            end
+
+            -- Update quests
+            questsValueLabel.Text = data.Quest.Value
+        else
+            -- Fallback if no stats are found
+            usernameValueLabel.Text = "[No Data]"
+            rebirthsValueLabel.Text = "0"
+            rebirthRequirementValueLabel.Text = "N/A"
+            statsValueLabel.Text = "0"
+            questsValueLabel.Text = "No Quests"
+        end
+
+        task.wait(1)
+    end
+end)
