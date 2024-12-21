@@ -206,6 +206,6 @@ task.spawn(function()
             questsValueLabel.Text = "No Quests"
         end
 
-        task.wait(1)
+        task.wait()
     end
 end)
