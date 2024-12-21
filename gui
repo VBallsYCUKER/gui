@@ -1,3 +1,32 @@
+while not game:IsLoaded() do wait() end
+while not game.Players.LocalPlayer do wait() end
+local lplr = game.Players.LocalPlayer
+while not lplr.Character do wait() end
+local ldata = game.ReplicatedStorage:WaitForChild("Datas"):WaitForChild(tostring(lplr.UserId))
+
+-- LocalScript to delete all GUI elements from the LocalPlayer's PlayerGui
+
+-- Get the LocalPlayer
+local player = game.Players.LocalPlayer
+
+-- Get the PlayerGui
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Function to delete all GUI elements
+local function deleteAllGui()
+    for _, guiElement in ipairs(playerGui:GetChildren()) do
+        if guiElement:IsA("GuiObject") or guiElement:IsA("ScreenGui") then
+            guiElement:Destroy()
+        end
+    end
+end
+
+-- Execute the function
+deleteAllGui()
+
+
+
+-- Initialize GUI
 local screenGui = Instance.new("ScreenGui")
 local mainFrame = Instance.new("Frame")
 local uiCorner = Instance.new("UICorner")
@@ -154,13 +183,18 @@ bottomTextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 -- Update values dynamically
 task.spawn(function()
     while true do
-        local player = game.Players.LocalPlayer
-        local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+        -- Ensure player data is loaded
+        if not ldata or not ldata:FindFirstChild("Quest") then
+            wait(1)
+            continue
+        end
+        
+        local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(lplr.UserId))
 
         -- Check if playerStats exists
         if playerStats then
             -- Username
-            usernameValueLabel.Text = player.Name
+            usernameValueLabel.Text = lplr.Name
 
             -- Rebirths
             local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
@@ -185,18 +219,13 @@ task.spawn(function()
             statsValueLabel.Text = energy
 
             -- Quests (Updated logic)
-            local ldata = game.Players.LocalPlayer:FindFirstChild("Data") -- assuming player data
-            local data = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
-
-            if ldata and data and ldata:FindFirstChild("Quest") and data:FindFirstChild("Quest") then
-                if ldata.Quest.Value ~= data.Quest.Value and data.Quest.Value ~= "" then
-                    game:GetService("ReplicatedStorage").Package.Events.Qaction:InvokeServer(game.Workspace.Others.NPCs[data.Quest.Value])
-                    game.Players.LocalPlayer.PlayerGui.Main.MainFrame.Frames.Quest.Visible = false
-                end
+            if ldata.Quest.Value ~= playerStats.Quest.Value and playerStats.Quest.Value ~= "" then
+                game:GetService("ReplicatedStorage").Package.Events.Qaction:InvokeServer(game.Workspace.Others.NPCs[playerStats.Quest.Value])
+                lplr.PlayerGui.Main.MainFrame.Frames.Quest.Visible = false
             end
 
             -- Update quests
-            questsValueLabel.Text = data.Quest.Value
+            questsValueLabel.Text = playerStats.Quest.Value
         else
             -- Fallback if no stats are found
             usernameValueLabel.Text = "[No Data]"
@@ -206,6 +235,6 @@ task.spawn(function()
             questsValueLabel.Text = "No Quests"
         end
 
-        task.wait()
+        task.wait(1)
     end
 end)
