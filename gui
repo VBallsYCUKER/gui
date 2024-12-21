@@ -1,32 +1,3 @@
-while not game:IsLoaded() do wait() end
-while not game.Players.LocalPlayer do wait() end
-local lplr = game.Players.LocalPlayer
-while not lplr.Character do wait() end
-local ldata = game.ReplicatedStorage:WaitForChild("Datas"):WaitForChild(tostring(lplr.UserId))
-
-wait(2)
-
--- LocalScript to delete all GUI elements from the LocalPlayer's PlayerGui
-
--- Get the LocalPlayer
-local player = game.Players.LocalPlayer
-
--- Get the PlayerGui
-local playerGui = player:WaitForChild("PlayerGui")
-
--- Function to delete all GUI elements
-local function deleteAllGui()
-    for _, guiElement in ipairs(playerGui:GetChildren()) do
-        if guiElement:IsA("GuiObject") or guiElement:IsA("ScreenGui") then
-            guiElement:Destroy()
-        end
-    end
-end
-
--- Execute the function
-deleteAllGui()
-
-
 
 -- Initialize GUI
 local screenGui = Instance.new("ScreenGui")
@@ -237,6 +208,6 @@ task.spawn(function()
             questsValueLabel.Text = "No Quests"
         end
 
-        task.wait(1)
+        task.wait()
     end
 end)
