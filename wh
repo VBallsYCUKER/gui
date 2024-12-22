@@ -82,10 +82,6 @@ local function getWebhookColor(rebirths)
         return 0xFFB6C1 -- Light Pink
     else
         return 0xFF69B4 -- Neon Pink
-    elseif rebirths <= 100001 then
-        return 0xFFB6C1 -- Light Pink
-    else
-        return FF000000 -- black
     end
 end
 
