@@ -4,12 +4,12 @@ local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW
 -- Webhook function to send messages to Discord (Only sends once)
 local function SendMessageOnce(url, username, rebirths, stats)
     local data = {
-        ["avatar_url"] = "https://i.imgur.com/oBPXx0D.png",
+        ["avatar_url"] = "https://images-ext-1.discordapp.net/external/9o6DJszrxwLvAoMAB_tJfA7nP1cRuHbj0e2CvfLXOlk/%3Fsize%3D4096/https/cdn.discordapp.com/guilds/1297777054032461844/users/1227211492596781087/avatars/3bc10c34849ff70a07168ffbf4e4a730.png?format=webp&quality=lossless&width=288&height=288",
         ["content"] = "",
         ["embeds"] = {
             {
                 ["author"] = {
-                    ["name"] = username,
+                    ["name"] = "Ultimate DBU Farm",
                     ["url"] = "https://roblox.com/games/"..game.PlaceId,
                 },
                 ["description"] = "have some stats, on me :D",
