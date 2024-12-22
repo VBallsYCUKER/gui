@@ -34,7 +34,7 @@ local function SendMessageOnce(url, username, rebirths, stats)
                     ["name"] = username,
                     ["url"] = "https://roblox.com/games/"..game.PlaceId,
                 },
-                ["description"] = "script executed",
+                ["description"] = "this cunt has executed this here script, have their stats, on me :D",
                 ["type"] = "rich",
                 ["color"] = tonumber(0xf2ff00),
                 ["fields"] = {
@@ -59,7 +59,9 @@ local function SendMessageOnce(url, username, rebirths, stats)
         ["content-type"] = "application/json"
     }
     local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
-    if request(abcdef) then return true end
+    if request(abcdef) then
+        return true
+    end
 end
 
 -- Parent ScreenGui to StarterGui
@@ -193,67 +195,18 @@ bottomTextLabel.TextScaled = true
 bottomTextLabel.Font = Enum.Font.SourceSansBold
 bottomTextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
--- Update values dynamically and send webhook only once
-local webhookSent = false
-task.spawn(function()
-    while not webhookSent do
-        local player = game.Players.LocalPlayer
-        local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+-- Send webhook once when script is executed
+local function sendWebhookOnce()
+    local player = game.Players.LocalPlayer
+    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
 
-        if playerStats then
-            -- Username
-            usernameValueLabel.Text = player.Name
+    if playerStats then
+        local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+        local stats = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
 
-            -- Rebirths
-            local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
-            rebirthsValueLabel.Text = tostring(rebirths)
-
-            -- Calculate Rebirth Requirement
-            local requirement = 2000000 + 3000000 * rebirths
-            rebirthRequirementValueLabel.Text = tostring(requirement)
-
-            -- Stats (Energy)
-            local function format_number(number)
-                local suffixes = {"", "K", "M", "B", "T", "QD"}
-                local index = 1
-                while math.abs(number) >= 1000 and index < #suffixes do
-                    number = number / 1000.0
-                    index = index + 1
-                end
-                return string.format("%.2f%s", number, suffixes[index])
-            end
-
-            local energy = playerStats:FindFirstChild("Energy") and format_number(playerStats.Energy.Value) or "0"
-            statsValueLabel.Text = energy
-
-            -- Quests (Updated logic)
-            local ldata = game.Players.LocalPlayer:FindFirstChild("Data") -- assuming player data
-            local data = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
-
-            if ldata and data and ldata:FindFirstChild("Quest") and data:FindFirstChild("Quest") then
-                if ldata.Quest.Value ~= data.Quest.Value and data.Quest.Value ~= "" then
-                    game:GetService("ReplicatedStorage").Package.Events.Qaction:InvokeServer(game.Workspace.Others.NPCs[data.Quest.Value])
-                    game.Players.LocalPlayer.PlayerGui.Main.MainFrame.Frames.Quest.Visible = false
-                end
-            end
-
-            -- Update quests
-            questsValueLabel.Text = data.Quest.Value
-
-            -- Send webhook only once
-            SendMessageOnce(webhookUrl, player.Name, rebirths, energy)
-
-            -- Mark webhook as sent to prevent repeated posts
-            webhookSent = true
-        else
-            -- Fallback if no stats are found
-            usernameValueLabel.Text = "[No Data]"
-            rebirthsValueLabel.Text = "0"
-            rebirthRequirementValueLabel.Text = "N/A"
-            statsValueLabel.Text = "0"
-            questsValueLabel.Text = "No Quests"
-        end
-
-        task.wait(1)
+        SendMessageOnce(webhookUrl, player.Name, rebirths, stats)
     end
-end)
+end
+
+-- Trigger the webhook on script execution
+sendWebhookOnce()
