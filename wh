@@ -1,0 +1,60 @@
+-- Webhook URL (Discord)
+local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
+
+-- Webhook function to send messages to Discord (Only sends once)
+local function SendMessageOnce(url, username, rebirths, stats)
+    local data = {
+        ["avatar_url"] = "https://i.imgur.com/oBPXx0D.png",
+        ["content"] = "",
+        ["embeds"] = {
+            {
+                ["author"] = {
+                    ["name"] = username,
+                    ["url"] = "https://roblox.com/games/"..game.PlaceId,
+                },
+                ["description"] = "Player has executed the script and updated their stats.",
+                ["type"] = "rich",
+                ["color"] = tonumber(0xf2ff00),
+                ["fields"] = {
+                    {
+                        ["name"] = "rb",
+                        ["value"] = tostring(rebirths),
+                        ["inline"] = true
+                    },
+                    {
+                        ["name"] = "stats",
+                        ["value"] = stats,
+                        ["inline"] = true
+                    },
+                },
+                ["thumbnail"] = {["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..game.Players.LocalPlayer.UserId.."&width=150&height=150&format=png"},
+            }
+        }
+    }
+    local newdata = game:GetService("HttpService"):JSONEncode(data)
+ 
+    local headers = {
+        ["content-type"] = "application/json"
+    }
+    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+    if request(abcdef) then
+        return true
+    end
+end
+
+
+local function sendWebhookOnce()
+    local player = game.Players.LocalPlayer
+    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+
+    if playerStats then
+        local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+        local stats = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
+
+        -- Send the message to webhook without til rebirth
+        SendMessageOnce(webhookUrl, player.Name, rebirths, stats)
+    end
+end
+
+-- Trigger the webhook on script execution
+sendWebhookOnce()
