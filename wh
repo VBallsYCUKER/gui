@@ -47,6 +47,11 @@ local function SendMessageOnce(url, username, rebirths, stats, playerTime)
     end
 end
 
+-- Helper function to convert numbers to scientific notation
+local function toScientificNotation(num)
+    return string.format("%.0e", num)
+end
+
 local function sendWebhookOnce()
     local player = game.Players.LocalPlayer
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
@@ -55,12 +60,15 @@ local function sendWebhookOnce()
         local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
         local stats = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
 
+        -- Convert stats to scientific notation
+        local statsInScientificNotation = toScientificNotation(stats)
+
         -- Assume the player's UTC offset is stored in their stats or profile
         local utcOffset = playerStats:FindFirstChild("UtcOffset") and playerStats.UtcOffset.Value or 0
         local playerTime = os.date("%Y-%m-%d %H:%M:%S", os.time() + utcOffset * 3600)
 
         -- Send the message to the webhook
-        SendMessageOnce(webhookUrl, player.Name, rebirths, stats, playerTime)
+        SendMessageOnce(webhookUrl, player.Name, rebirths, statsInScientificNotation, playerTime)
     end
 end
 
