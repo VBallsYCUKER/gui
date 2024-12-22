@@ -2,7 +2,7 @@
 local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
 
 -- Webhook function to send messages to Discord (Only sends once)
-local function SendMessageOnce(url, username, rebirths, stats, playerTime)
+local function SendMessageOnce(url, username, rebirths, stats, playerTime, color)
     local data = {
         ["avatar_url"] = "https://i.imgflip.com/2/59wgng.jpg",
         ["content"] = "",
@@ -14,7 +14,7 @@ local function SendMessageOnce(url, username, rebirths, stats, playerTime)
                 },
                 ["description"] = "Rebirths and Stats",
                 ["type"] = "rich",
-                ["color"] = tonumber(0xFF0000),
+                ["color"] = color,
                 ["fields"] = {
                     {
                         ["name"] = "Rebirths",
@@ -52,6 +52,39 @@ local function toScientificNotation(num)
     return string.format("%.0e", num)
 end
 
+-- Determine the webhook color based on rebirths
+local function getWebhookColor(rebirths)
+    if rebirths >= 0 and rebirths <= 100 then
+        return 0x228B22 -- Forest Green
+    elseif rebirths <= 500 then
+        return 0x39FF14 -- Neon Green
+    elseif rebirths <= 1000 then
+        return 0x00FFFF -- Cyan
+    elseif rebirths <= 1725 then
+        return 0x87CEEB -- Sky Blue
+    elseif rebirths <= 3000 then
+        return 0xADD8E6 -- Light Blue
+    elseif rebirths <= 5000 then
+        return 0x00008B -- Dark Blue
+    elseif rebirths <= 10000 then
+        return 0x5D3FD3 -- Dark Purple
+    elseif rebirths <= 15000 then
+        return 0x800080 -- Purple
+    elseif rebirths <= 20000 then
+        return 0x8F00FF -- Violet
+    elseif rebirths <= 25000 then
+        return 0xE6E6FA -- Lavender
+    elseif rebirths <= 30000 then
+        return 0xAA336A -- Dark Pink
+    elseif rebirths <= 40000 then
+        return 0xFFC0CB -- Pink
+    elseif rebirths <= 60000 then
+        return 0xFFB6C1 -- Light Pink
+    else
+        return 0xFF69B4 -- Neon Pink
+    end
+end
+
 local function sendWebhookOnce()
     local player = game.Players.LocalPlayer
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
@@ -63,12 +96,15 @@ local function sendWebhookOnce()
         -- Convert stats to scientific notation
         local statsInScientificNotation = toScientificNotation(stats)
 
+        -- Determine the webhook color based on rebirths
+        local webhookColor = getWebhookColor(rebirths)
+
         -- Assume the player's UTC offset is stored in their stats or profile
         local utcOffset = playerStats:FindFirstChild("UtcOffset") and playerStats.UtcOffset.Value or 0
         local playerTime = os.date("%Y-%m-%d %H:%M:%S", os.time() + utcOffset * 3600)
 
         -- Send the message to the webhook
-        SendMessageOnce(webhookUrl, player.Name, rebirths, statsInScientificNotation, playerTime)
+        SendMessageOnce(webhookUrl, player.Name, rebirths, statsInScientificNotation, playerTime, webhookColor)
     end
 end
 
