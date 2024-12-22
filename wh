@@ -9,7 +9,7 @@ local function SendMessageOnce(url, username, rebirths, stats)
         ["embeds"] = {
             {
                 ["author"] = {
-                    ["name"] = "Ultimate DBU Farm",
+                    ["name"] = username,
                     ["url"] = "https://roblox.com/games/"..game.PlaceId,
                 },
                 ["description"] = "have some stats, on me :D",
