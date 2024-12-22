@@ -1,3 +1,4 @@
+
 local screenGui = Instance.new("ScreenGui")
 local mainFrame = Instance.new("Frame")
 local uiCorner = Instance.new("UICorner")
@@ -13,6 +14,9 @@ local rebirthRequirementValueLabel = Instance.new("TextLabel")
 
 local statsLabel = Instance.new("TextLabel")
 local statsValueLabel = Instance.new("TextLabel")
+
+local statsTilRebirthLabel = Instance.new("TextLabel")
+local statsTilRebirthValueLabel = Instance.new("TextLabel")
 
 local questsLabel = Instance.new("TextLabel")
 local questsValueLabel = Instance.new("TextLabel")
@@ -115,6 +119,26 @@ statsValueLabel.TextScaled = true
 statsValueLabel.Font = Enum.Font.SourceSans
 statsValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
+-- Stats Til Rebirth Label (new)
+statsTilRebirthLabel.Parent = mainFrame
+statsTilRebirthLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+statsTilRebirthLabel.Position = UDim2.new(0.65, 0, 0.25, 0)  -- Positioned below Stats Value
+statsTilRebirthLabel.BackgroundTransparency = 1
+statsTilRebirthLabel.Text = "Stats til Rebirth"
+statsTilRebirthLabel.TextScaled = true
+statsTilRebirthLabel.Font = Enum.Font.SourceSansBold
+statsTilRebirthLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Stats Til Rebirth Value Label (new)
+statsTilRebirthValueLabel.Parent = mainFrame
+statsTilRebirthValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+statsTilRebirthValueLabel.Position = UDim2.new(0.65, 0, 0.35, 0)  -- Positioned below Stats til Rebirth
+statsTilRebirthValueLabel.BackgroundTransparency = 1
+statsTilRebirthValueLabel.Text = "[Stats to Next Rebirth]"
+statsTilRebirthValueLabel.TextScaled = true
+statsTilRebirthValueLabel.Font = Enum.Font.SourceSans
+statsTilRebirthValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
 -- Quests Label
 questsLabel.Parent = mainFrame
 questsLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
@@ -157,7 +181,7 @@ task.spawn(function()
         local player = game.Players.LocalPlayer
         local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
 
-        -- Check if playerStats exists
+        -- Ensure playerStats exists
         if playerStats then
             -- Username
             usernameValueLabel.Text = player.Name
@@ -166,7 +190,7 @@ task.spawn(function()
             local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
             rebirthsValueLabel.Text = tostring(rebirths)
 
-            -- Calculate Rebirth Requirement
+            -- Rebirth Requirement Calculation
             local requirement = 2000000 + 3000000 * rebirths
             rebirthRequirementValueLabel.Text = tostring(requirement)
 
@@ -181,11 +205,15 @@ task.spawn(function()
                 return string.format("%.2f%s", number, suffixes[index])
             end
 
-            local energy = playerStats:FindFirstChild("Energy") and format_number(playerStats.Energy.Value) or "0"
-            statsValueLabel.Text = energy
+            local energy = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
+            statsValueLabel.Text = format_number(energy)
+
+            -- Calculate Stats Till Rebirth
+            local statsToNextRebirth = requirement - energy
+            statsTilRebirthValueLabel.Text = statsToNextRebirth > 0 and format_number(statsToNextRebirth) or "N/A"
 
             -- Quests (Updated logic)
-            local ldata = game.Players.LocalPlayer:FindFirstChild("Data") -- assuming player data
+            local ldata = game.Players.LocalPlayer:FindFirstChild("Data")
             local data = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
 
             if ldata and data and ldata:FindFirstChild("Quest") and data:FindFirstChild("Quest") then
@@ -204,6 +232,7 @@ task.spawn(function()
             rebirthRequirementValueLabel.Text = "N/A"
             statsValueLabel.Text = "0"
             questsValueLabel.Text = "No Quests"
+            statsTilRebirthValueLabel.Text = "N/A"
         end
 
         task.wait(1)
