@@ -4,7 +4,7 @@ local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW
 -- Webhook function to send messages to Discord (Only sends once)
 local function SendMessageOnce(url, username, rebirths, stats)
     local data = {
-        ["avatar_url"] = "https://static.vecteezy.com/system/resources/previews/023/741/062/non_2x/discord-logo-icon-social-media-icon-free-png.png",
+        ["avatar_url"] = "https://logowik.com/content/uploads/images/discord-blue-icon1720879149.logowik.com.webp",
         ["content"] = "",
         ["embeds"] = {
             {
