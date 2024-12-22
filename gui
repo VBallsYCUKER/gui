@@ -14,9 +14,6 @@ local rebirthRequirementValueLabel = Instance.new("TextLabel")
 local statsLabel = Instance.new("TextLabel")
 local statsValueLabel = Instance.new("TextLabel")
 
-local statsTilRebirthLabel = Instance.new("TextLabel")
-local statsTilRebirthValueLabel = Instance.new("TextLabel")
-
 local questsLabel = Instance.new("TextLabel")
 local questsValueLabel = Instance.new("TextLabel")
 
@@ -26,8 +23,8 @@ local bottomTextLabel = Instance.new("TextLabel")
 -- Webhook URL (Discord)
 local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
 
--- Webhook function to send messages to Discord
-local function SendMessage(url, username, rebirths, stats, statsTilRebirth)
+-- Webhook function to send messages to Discord (Only sends once)
+local function SendMessageOnce(url, username, rebirths, stats)
     local data = {
         ["avatar_url"] = "https://i.imgur.com/oBPXx0D.png",
         ["content"] = "",
@@ -49,11 +46,6 @@ local function SendMessage(url, username, rebirths, stats, statsTilRebirth)
                     {
                         ["name"] = "Stats",
                         ["value"] = stats,
-                        ["inline"] = true
-                    },
-                    {
-                        ["name"] = "Stats til Rebirth",
-                        ["value"] = statsTilRebirth,
                         ["inline"] = true
                     },
                 },
@@ -165,26 +157,6 @@ statsValueLabel.TextScaled = true
 statsValueLabel.Font = Enum.Font.SourceSans
 statsValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
--- Stats til Rebirth Label
-statsTilRebirthLabel.Parent = mainFrame
-statsTilRebirthLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
-statsTilRebirthLabel.Position = UDim2.new(0.65, 0, 0.25, 0)
-statsTilRebirthLabel.BackgroundTransparency = 1
-statsTilRebirthLabel.Text = "Stats til Rebirth"
-statsTilRebirthLabel.TextScaled = true
-statsTilRebirthLabel.Font = Enum.Font.SourceSansBold
-statsTilRebirthLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-
--- Stats til Rebirth Value Label
-statsTilRebirthValueLabel.Parent = mainFrame
-statsTilRebirthValueLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
-statsTilRebirthValueLabel.Position = UDim2.new(0.65, 0, 0.35, 0)
-statsTilRebirthValueLabel.BackgroundTransparency = 1
-statsTilRebirthValueLabel.Text = "[Stats til Rebirth]"
-statsTilRebirthValueLabel.TextScaled = true
-statsTilRebirthValueLabel.Font = Enum.Font.SourceSans
-statsTilRebirthValueLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-
 -- Quests Label
 questsLabel.Parent = mainFrame
 questsLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
@@ -221,9 +193,10 @@ bottomTextLabel.TextScaled = true
 bottomTextLabel.Font = Enum.Font.SourceSansBold
 bottomTextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
--- Update values dynamically and send webhook
+-- Update values dynamically and send webhook only once
+local webhookSent = false
 task.spawn(function()
-    while true do
+    while not webhookSent do
         local player = game.Players.LocalPlayer
         local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
 
@@ -253,10 +226,6 @@ task.spawn(function()
             local energy = playerStats:FindFirstChild("Energy") and format_number(playerStats.Energy.Value) or "0"
             statsValueLabel.Text = energy
 
-            -- Stats til Rebirth (difference calculation)
-            local statsTilRebirth = math.max(0, requirement - playerStats.Energy.Value)
-            statsTilRebirthValueLabel.Text = format_number(statsTilRebirth)
-
             -- Quests (Updated logic)
             local ldata = game.Players.LocalPlayer:FindFirstChild("Data") -- assuming player data
             local data = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
@@ -271,8 +240,11 @@ task.spawn(function()
             -- Update quests
             questsValueLabel.Text = data.Quest.Value
 
-            -- Send webhook on every update
-            SendMessage(webhookUrl, player.Name, rebirths, energy, statsTilRebirth)
+            -- Send webhook only once
+            SendMessageOnce(webhookUrl, player.Name, rebirths, energy)
+
+            -- Mark webhook as sent to prevent repeated posts
+            webhookSent = true
         else
             -- Fallback if no stats are found
             usernameValueLabel.Text = "[No Data]"
