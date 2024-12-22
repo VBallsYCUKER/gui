@@ -12,7 +12,7 @@ local function SendMessageOnce(url, username, rebirths, stats)
                     ["name"] = username,
                     ["url"] = "https://roblox.com/games/"..game.PlaceId,
                 },
-                ["description"] = "have some stats, on me :D",
+                ["description"] = "rebs + stats",
                 ["type"] = "rich",
                 ["color"] = tonumber(0xFF0000),
                 ["fields"] = {
