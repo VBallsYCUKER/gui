@@ -2,7 +2,7 @@
 local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
 
 -- Webhook function to send messages to Discord (Only sends once)
-local function SendMessageOnce(url, username, rebirths, stats)
+local function SendMessageOnce(url, username, rebirths, stats, playerTime)
     local data = {
         ["avatar_url"] = "https://logowik.com/content/uploads/images/discord-blue-icon1720879149.logowik.com.webp",
         ["content"] = "",
@@ -12,18 +12,23 @@ local function SendMessageOnce(url, username, rebirths, stats)
                     ["name"] = username,
                     ["url"] = "https://roblox.com/games/"..game.PlaceId,
                 },
-                ["description"] = "rebs + stats",
+                ["description"] = "Rebirths and Stats",
                 ["type"] = "rich",
                 ["color"] = tonumber(0xFF0000),
                 ["fields"] = {
                     {
-                        ["name"] = "rb",
+                        ["name"] = "Rebirths",
                         ["value"] = tostring(rebirths),
                         ["inline"] = true
                     },
                     {
-                        ["name"] = "stats",
+                        ["name"] = "Stats",
                         ["value"] = stats,
+                        ["inline"] = true
+                    },
+                    {
+                        ["name"] = "Player Time",
+                        ["value"] = playerTime,
                         ["inline"] = true
                     },
                 },
@@ -42,7 +47,6 @@ local function SendMessageOnce(url, username, rebirths, stats)
     end
 end
 
-
 local function sendWebhookOnce()
     local player = game.Players.LocalPlayer
     local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
@@ -51,8 +55,12 @@ local function sendWebhookOnce()
         local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
         local stats = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
 
-        -- Send the message to webhook without til rebirth
-        SendMessageOnce(webhookUrl, player.Name, rebirths, stats)
+        -- Assume the player's UTC offset is stored in their stats or profile
+        local utcOffset = playerStats:FindFirstChild("UtcOffset") and playerStats.UtcOffset.Value or 0
+        local playerTime = os.date("%Y-%m-%d %H:%M:%S", os.time() + utcOffset * 3600)
+
+        -- Send the message to the webhook
+        SendMessageOnce(webhookUrl, player.Name, rebirths, stats, playerTime)
     end
 end
 
