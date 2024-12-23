@@ -1,8 +1,13 @@
 -- Define `getgenv` to allow dynamic webhook URL configuration
-getgenv().WebhookUrl = getgenv().WebhookUrl or "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
+getgenv().WebhookUrl = getgenv().WebhookUrl or ""
 
 -- Webhook function to send messages to Discord (Only sends once)
 local function SendMessageOnce(url, username, rebirths, stats, playerTime, color)
+    if url == "" then
+        warn("No Webhook URL specified! Please set getgenv().WebhookUrl before running the script.")
+        return false
+    end
+
     local data = {
         ["avatar_url"] = "https://i.imgflip.com/2/59wgng.jpg",
         ["content"] = "",
@@ -42,8 +47,14 @@ local function SendMessageOnce(url, username, rebirths, stats, playerTime, color
         ["content-type"] = "application/json"
     }
     local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
-    if request(abcdef) then
+    local success, response = pcall(function()
+        return request(abcdef)
+    end)
+    if success then
         return true
+    else
+        warn("Failed to send webhook: " .. tostring(response))
+        return false
     end
 end
 
