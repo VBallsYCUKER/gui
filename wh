@@ -1,5 +1,5 @@
--- Webhook URL (Discord)
-local webhookUrl = "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
+-- Define `getgenv` to allow dynamic webhook URL configuration
+getgenv().WebhookUrl = getgenv().WebhookUrl or "https://ptb.discord.com/api/webhooks/1315872200858931330/nWW8vDsNTUnHHAQ7Fg6Kde0Ak4b6TOjWfQ3Kj2TuyfvECJAK4Y0sRWyZ3Nd4q3-e3esJ"
 
 -- Webhook function to send messages to Discord (Only sends once)
 local function SendMessageOnce(url, username, rebirths, stats, playerTime, color)
@@ -10,7 +10,7 @@ local function SendMessageOnce(url, username, rebirths, stats, playerTime, color
             {
                 ["author"] = {
                     ["name"] = username,
-                    ["url"] = "https://roblox.com/games/"..game.PlaceId,
+                    ["url"] = "https://roblox.com/games/" .. game.PlaceId,
                 },
                 ["description"] = "Rebirths and Stats",
                 ["type"] = "rich",
@@ -32,12 +32,12 @@ local function SendMessageOnce(url, username, rebirths, stats, playerTime, color
                         ["inline"] = true
                     },
                 },
-                ["thumbnail"] = {["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..game.Players.LocalPlayer.UserId.."&width=150&height=150&format=png"},
+                ["thumbnail"] = {["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. game.Players.LocalPlayer.UserId .. "&width=150&height=150&format=png"},
             }
         }
     }
     local newdata = game:GetService("HttpService"):JSONEncode(data)
- 
+
     local headers = {
         ["content-type"] = "application/json"
     }
@@ -104,7 +104,7 @@ local function sendWebhookOnce()
         local playerTime = os.date("%Y-%m-%d %H:%M:%S", os.time() + utcOffset * 3600)
 
         -- Send the message to the webhook
-        SendMessageOnce(webhookUrl, player.Name, rebirths, statsInScientificNotation, playerTime, webhookColor)
+        SendMessageOnce(getgenv().WebhookUrl, player.Name, rebirths, statsInScientificNotation, playerTime, webhookColor)
     end
 end
 
