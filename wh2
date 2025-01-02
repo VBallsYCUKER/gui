@@ -1,0 +1,64 @@
+local HttpService = game:GetService("HttpService")
+
+function format_number(number)
+    local suffixes = {"", "K", "M", "B", "T", "QD"}
+    local suffix_index = 1
+
+    while math.abs(number) >= 1000 and suffix_index < #suffixes do
+        number = number / 1000.0
+        suffix_index = suffix_index + 1
+    end
+
+    return string.format("%.2f%s", number, suffixes[suffix_index])
+end
+
+local function send_webhook(data, link)
+    local response = http_request({
+        Url = link,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = HttpService:JSONEncode(data)
+    })
+    print("Webhook sent:", response.Success)
+end
+
+local function grab_and_send_stats()
+    local player = game.Players.LocalPlayer
+    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("Datas"):FindFirstChild(tostring(player.UserId))
+
+    if playerStats then
+        local energy = playerStats:FindFirstChild("Energy") and playerStats.Energy.Value or 0
+        local rebirths = playerStats:FindFirstChild("Rebirth") and playerStats.Rebirth.Value or 0
+
+        local formattedStats = format_number(energy)
+
+        local data = {
+            ["content"] = "",
+            ["embeds"] = { {
+                ["title"] = "Dbu Farm",
+                ["description"] = string.format("Username:\n%s\n\nStats: %s || Rebirths: %s",
+                    player.Name, formattedStats, rebirths),
+                ["color"] = 6386687,
+                ["footer"] = {
+                    ["text"] = "Orbital NoG",
+                    ["icon_url"] = "https://images-ext-1.discordapp.net/external/JpEjICUTNWzEfGDE7jZPRHZSQAAewEF3NK5bGxEdPtI/%3Ftoken%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvY2NjZWFhOTctZGViYi00ZDIzLTkwMTItMWRmNGRhYjc0ZTFlXC9kZTB1ejU1LWQ4MWJhYThmLWExZTYtNGM4NS1hMTE2LWE3Yzg2NWQ4MWYyYi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.f25oq5g593PcgSZFvy1nANEOTDVidFgugu9iQdPZG_Y/https/images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ccceaa97-debb-4d23-9012-1df4dab74e1e/de0uz55-d81baa8f-a1e6-4c85-a116-a7c865d81f2b.png/v1/fill/w_1024%2Ch_576%2Cq_80%2Cstrp/dragon_blox_ultimate_by_itzduo_de0uz55-fullview.jpg?format=webp&width=1054&height=592"
+                },
+                ["thumbnail"] = {
+                    ["url"] = "https://images-ext-1.discordapp.net/external/JpEjICUTNWzEfGDE7jZPRHZSQAAewEF3NK5bGxEdPtI/%3Ftoken%3DeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvY2NjZWFhOTctZGViYi00ZDIzLTkwMTItMWRmNGRhYjc0ZTFlXC9kZTB1ejU1LWQ4MWJhYThmLWExZTYtNGM4NS1hMTE2LWE3Yzg2NWQ4MWYyYi5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.f25oq5g593PcgSZFvy1nANEOTDVidFgugu9iQdPZG_Y/https/images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ccceaa97-debb-4d23-9012-1df4dab74e1e/de0uz55-d81baa8f-a1e6-4c85-a116-a7c865d81f2b.png/v1/fill/w_1024%2Ch_576%2Cq_80%2Cstrp/dragon_blox_ultimate_by_itzduo_de0uz55-fullview.jpg?format=webp&width=1054&height=592"
+                }
+            }},
+            ["username"] = "Ultimate DBU Farm",
+            ["avatar_url"] = "https://images-ext-1.discordapp.net/external/Dsz7m98agFXgW0GT80Cxgupl_8a4Jw3h-hYkDjW16eo/https/static.wixstatic.com/media/03c1b0_f5011faad54b4e7f92cf106217e618d9~mv2.jpg/v1/fill/w_1933%2Ch_763%2Cal_c/03c1b0_f5011faad54b4e7f92cf106217e618d9~mv2.jpg?format=webp&width=1440&height=568"
+        }
+
+        send_webhook(data, "https://ptb.discord.com/api/webhooks/1315391519720734740/ZuhD8_9a_kBHzj_VG7ktyROPJ6Zeg2m1GI4G_T5oHch3RI5gFBtvnRpW2LZ2zvcF-yk5")
+    else
+        print("Player stats not found.")
+    end
+end
+
+while wait(30) do
+    pcall(grab_and_send_stats)
+end
