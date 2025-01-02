@@ -1,3 +1,36 @@
+-- Initialize getgenv variables
+getgenv().wh1 = true
+getgenv().wh2 = false
+
+-- GUI Setup (unchanged, omitted here for brevity)
+
+-- Load external script using loadstring with toggling logic
+if getgenv().wh1 then
+    local success, externalScript = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/gui/refs/heads/main/wh", true))
+    end)
+    
+    if success and externalScript then
+        externalScript() -- Execute the external script for wh1
+    else
+        warn("Failed to load wh1 script.")
+    end
+else
+    -- If wh1 is false, enable wh2 and load its script
+    getgenv().wh2 = true
+    local success, externalScript = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/gui/refs/heads/main/wh2", true))
+    end)
+    
+    if success and externalScript then
+        externalScript() -- Execute the external script for wh2
+    else
+        warn("Failed to load wh2 script.")
+    end
+end
+
+-- Rest of the GUI setup and logic remains unchanged
+
 -- GUI Setup
 local screenGui = Instance.new("ScreenGui")
 local mainFrame = Instance.new("Frame")
@@ -238,9 +271,6 @@ task.spawn(function()
         task.wait(1)
     end
 end)
-
--- Load external script using loadstring
-local externalScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/VBallsYCUKER/gui/refs/heads/main/wh", true))
 
 -- Execute the external script
 if externalScript then
